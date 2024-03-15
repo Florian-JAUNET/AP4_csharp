@@ -1,4 +1,11 @@
 #pragma once
+#include "managedDatabase.h"
+#include <string>
+#include <iostream>
+#include <vector> // Import du header pour std::vector
+#include <string> // Import du header pour std::string
+#include "mysql_connection.h"
+
 
 
 namespace linkhubCLR {
@@ -10,17 +17,22 @@ namespace linkhubCLR {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
+
+
 	/// <summary>
 	/// Description résumée de FormMoney
 	/// </summary>
 	public ref class FormMoney : public System::Windows::Forms::Form
 	{
+	private:
+		ManagedDatabaseConnector^ managedConnector;
 	public:
 		FormMoney(void)
 		{
 			InitializeComponent();
 
-
+			managedConnector = gcnew ManagedDatabaseConnector();
 			//
 			//TODO: ajoutez ici le code du constructeur
 			//
@@ -38,6 +50,8 @@ namespace linkhubCLR {
 			}
 		}
 	private: System::Windows::Forms::ComboBox^ cbListUser;
+		   
+
 
 	protected:
 
@@ -48,7 +62,7 @@ namespace linkhubCLR {
 		/// <summary>
 		/// Variable nécessaire au concepteur.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -67,6 +81,7 @@ namespace linkhubCLR {
 			this->cbListUser->Name = L"cbListUser";
 			this->cbListUser->Size = System::Drawing::Size(367, 24);
 			this->cbListUser->TabIndex = 0;
+			this->cbListUser->SelectedIndexChanged += gcnew System::EventHandler(this, &FormMoney::cbListUser_SelectedIndexChanged);
 			// 
 			// FormMoney
 			// 
@@ -86,9 +101,30 @@ namespace linkhubCLR {
 		}
 #pragma endregion
 	private: System::Void FormMoney_Load(System::Object^ sender, System::EventArgs^ e) {
-		
+		managedConnector->ConnectDb("192.168.114.2", "lmascher", "hJfmd@$#w2@sBQYV", "linkhub");
+		sql::ResultSet* result = managedConnector->GetUserModerateur();
 
-		
+		std::vector<std::string> dataList;
+		std::map<std::string, std::string> idTextMap;
+
+		// Parcours des résultats et ajout à la combolist avec l'ID caché dans la map
+		while (result->next()) {
+			std::string id = result->getString(1); // Supposons que l'ID soit dans la première colonne
+			std::string text = result->getString(2) + "-" + result->getString(3); // Supposons que le texte soit dans la deuxième colonne
+
+			dataList.push_back(text);
+			idTextMap[id] = text; // Stocke la correspondance ID <-> Texte dans la map
+		}
+
+		// Parcours de la dataList pour ajouter les éléments à la combolist
+		for (const auto& text : dataList) {
+			cbListUser->Items->Add(gcnew String(text.c_str()));
+		}
+	}
+
+	private: System::Void cbListUser_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
 	};
 }
+
+

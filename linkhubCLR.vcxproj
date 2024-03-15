@@ -139,6 +139,7 @@
     <ClInclude Include="FormMoney.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="managedDatabase.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

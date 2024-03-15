@@ -18,6 +18,7 @@ namespace linkhubCLR {
 		FormHome(void)
 		{
 			InitializeComponent();
+
 			//
 			//TODO: ajoutez ici le code du constructeur
 			//
@@ -65,6 +66,7 @@ namespace linkhubCLR {
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
+			this->pictureBox1->Click += gcnew System::EventHandler(this, &FormHome::pictureBox1_Click);
 			// 
 			// FormHome
 			// 
@@ -83,5 +85,7 @@ namespace linkhubCLR {
 
 		}
 #pragma endregion
+	private: System::Void pictureBox1_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
 	};
 }

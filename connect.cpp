@@ -50,15 +50,10 @@ public:
 			
 	}
 
-	bool TestConnectAdmin(std::string id,std::string mdp) {
-		return false;
-	}
-	/*
-	sql::ResultSet* DatabaseConnector::getUser() {
+	sql::ResultSet* DatabaseConnector::getAuteurAll() {
 		try
 		{
-
-			pstmt = con->prepareStatement("SELECT* FROM UTILISATEUR");
+			pstmt = con->prepareStatement("SELECT * FROM AUTEUR ORDER BY id ASC");
 			resultRq = pstmt->executeQuery();
 			delete pstmt;
 			return resultRq;
@@ -69,7 +64,28 @@ public:
 		return nullptr;
 
 
-	}*/
+	}
+
+	bool TestConnectAdmin(std::string id,std::string mdp) {
+		return false;
+	}
+	
+	sql::ResultSet* DatabaseConnector::getUserModerateur() {
+		try
+		{
+
+			pstmt = con->prepareStatement("SELECT* FROM UTILISATEUR WHERE MODERATEUR = 1;");
+			resultRq = pstmt->executeQuery();
+			delete pstmt;
+			return resultRq;
+		}
+
+		catch (sql::SQLException& e) { return nullptr; }
+		catch (std::exception& e) { return nullptr; }
+		return nullptr;
+
+
+	}
 	
 
 

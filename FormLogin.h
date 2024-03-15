@@ -1,7 +1,7 @@
 #pragma once
-#include "connect.cpp"
-#include <msclr/marshal_cppstd.h>
 
+#include <msclr/marshal_cppstd.h>
+#include "managedDatabase.h"
 
 namespace linkhubCLR {
 
@@ -13,18 +13,21 @@ namespace linkhubCLR {
 	using namespace System::Drawing;
 	
 	
-	
-	
 
 	/// <summary>
 	/// Description résumée de FormLogin
 	/// </summary>
 	public ref class FormLogin : public System::Windows::Forms::Form
 	{
+	private:
+		ManagedDatabaseConnector^ managedConnector;
 	public:
 		FormLogin(void)
 		{
 			InitializeComponent();
+
+			managedConnector = gcnew ManagedDatabaseConnector();
+
 			//
 			//TODO: ajoutez ici le code du constructeur
 			//
@@ -70,14 +73,14 @@ namespace linkhubCLR {
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(FormLogin::typeid));
 			this->tbLogin = (gcnew System::Windows::Forms::RichTextBox());
 			this->panelMenu = (gcnew System::Windows::Forms::Panel());
+			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->btnConnexion = (gcnew System::Windows::Forms::Button());
 			this->tbMdp = (gcnew System::Windows::Forms::RichTextBox());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->panelRight = (gcnew System::Windows::Forms::Panel());
-			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->panelMenu->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// tbLogin
@@ -107,6 +110,16 @@ namespace linkhubCLR {
 			this->panelMenu->Name = L"panelMenu";
 			this->panelMenu->Size = System::Drawing::Size(680, 605);
 			this->panelMenu->TabIndex = 2;
+			// 
+			// pictureBox2
+			// 
+			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
+			this->pictureBox2->Location = System::Drawing::Point(29, 78);
+			this->pictureBox2->Name = L"pictureBox2";
+			this->pictureBox2->Size = System::Drawing::Size(623, 50);
+			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
+			this->pictureBox2->TabIndex = 5;
+			this->pictureBox2->TabStop = false;
 			// 
 			// btnConnexion
 			// 
@@ -165,16 +178,7 @@ namespace linkhubCLR {
 			this->panelRight->Name = L"panelRight";
 			this->panelRight->Size = System::Drawing::Size(596, 605);
 			this->panelRight->TabIndex = 4;
-			// 
-			// pictureBox2
-			// 
-			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
-			this->pictureBox2->Location = System::Drawing::Point(29, 78);
-			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(623, 50);
-			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
-			this->pictureBox2->TabIndex = 5;
-			this->pictureBox2->TabStop = false;
+			this->panelRight->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &FormLogin::panelRight_Paint);
 			// 
 			// FormLogin
 			// 
@@ -190,8 +194,8 @@ namespace linkhubCLR {
 			this->Name = L"FormLogin";
 			this->Text = L"FormLogin";
 			this->panelMenu->ResumeLayout(false);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -199,7 +203,7 @@ namespace linkhubCLR {
 	private: System::Void richTextBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void btnConnexion_Click(System::Object^ sender, System::EventArgs^ e) {
-		DatabaseConnector dbConnect;
+		/*DatabaseConnector dbConnect;
 		dbConnect.connectDb("192.168.114.2", "lmascher", "hJfmd@$#w2@sBQYV","linkhub");
 		int idAuteur = 30;  // Remplacez 1 par l'ID de l'auteur souhaité
 		sql::ResultSet* result = dbConnect.getAuteur(idAuteur);
@@ -212,8 +216,20 @@ namespace linkhubCLR {
 		}
 		else {
 			printf("rien");
+		}*/
+		managedConnector->ConnectDb("192.168.114.2", "lmascher", "hJfmd@$#w2@sBQYV", "linkhub");
+		sql::ResultSet* result = managedConnector->GetAuteur(30);
+		if (result != nullptr && result->next()) {
+			// Récupérer le nom de l'auteur depuis le résultat
+			std::string nomAuteur = result->getString("NOM");
+			System::String^ nomAuteurSys = msclr::interop::marshal_as<System::String^>(nomAuteur);
+			tbLogin->Text = nomAuteurSys;
 		}
-
+		else {
+			printf("rien");
+		}
 	}
+private: System::Void panelRight_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
 };
 }
