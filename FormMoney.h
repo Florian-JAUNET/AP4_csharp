@@ -171,6 +171,27 @@ namespace linkhubCLR {
 			idTextMap[id] = text; // Stocke la correspondance ID <-> Texte dans la map
 			cptEntreUser++;
 		}
+		//ajustattion du tableau par rapport au nb denregistrement
+		dataArray = gcnew array<MyData^>(cptEntreUser);
+		cptEntreUser = 0;
+
+		// Ajoute des données au tableau
+		while (result->next()) {
+
+			std::string id = result->getString(1); // Supposons que l'ID soit dans la première colonne
+			std::string text = result->getString(2) + "-" + result->getString(3); // Supposons que le texte soit dans la deuxième colonne
+			//convertion en type systeme
+			System::String^ managedText = gcnew System::String(text.c_str());
+			System::String^ managedId = gcnew System::String(id.c_str());
+
+
+			// Ajoute des données au tableau
+			dataArray[cptEntreUser] = gcnew MyData();
+			dataArray[cptEntreUser]->id = managedId;
+			dataArray[cptEntreUser]->text = managedText;
+
+			cptEntreUser++;
+		}
 
 		// Parcours de la dataList pour ajouter les éléments à la combolist
 		for (const auto& text : dataList) {
