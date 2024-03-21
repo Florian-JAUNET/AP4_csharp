@@ -155,7 +155,7 @@ namespace linkhubCLR {
 #pragma endregion
 	private: System::Void FormMoney_Load(System::Object^ sender, System::EventArgs^ e) {
 		managedConnector->ConnectDb("192.168.114.2", "lmascher", "hJfmd@$#w2@sBQYV", "linkhub");
-		sql::ResultSet* result = managedConnector->GetUserModerateur();
+		sql::ResultSet* result = managedConnector->GetUserAll();
 
 		std::vector<std::string> dataList;
 		std::map<std::string, std::string> idTextMap;

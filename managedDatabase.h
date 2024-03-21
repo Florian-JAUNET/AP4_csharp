@@ -38,6 +38,9 @@ public:
     sql::ResultSet* GetAuteurAll() {
         return nativeConnector->getAuteurAll();
     }
+    sql::ResultSet* GetUserAll() {
+        return nativeConnector->getUserAll();
+    }
 
     bool TestConnectAdmin(String^ id, String^ mdp) {
         return nativeConnector->TestConnectAdmin(msclr::interop::marshal_as<std::string>(id),

@@ -86,7 +86,22 @@ public:
 
 
 	}
-	
+	sql::ResultSet* DatabaseConnector::getUserAll() {
+		try
+		{
+
+			pstmt = con->prepareStatement("SELECT* FROM UTILISATEUR;");
+			resultRq = pstmt->executeQuery();
+			delete pstmt;
+			return resultRq;
+		}
+
+		catch (sql::SQLException& e) { return nullptr; }
+		catch (std::exception& e) { return nullptr; }
+		return nullptr;
+
+
+	}
 
 
 	
