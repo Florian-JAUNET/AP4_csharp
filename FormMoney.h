@@ -28,6 +28,11 @@ namespace linkhubCLR {
 	private:
 		ManagedDatabaseConnector^ managedConnector;
 	public:
+		ref class MyData {
+		public:
+			String^ id;
+			String^ text;
+		};
 		FormMoney(void)
 		{
 			InitializeComponent();
@@ -37,6 +42,8 @@ namespace linkhubCLR {
 			//TODO: ajoutez ici le code du constructeur
 			//
 		}
+	private:
+		array<MyData^>^ dataArray;
 
 	protected:
 		/// <summary>
@@ -50,7 +57,10 @@ namespace linkhubCLR {
 			}
 		}
 	private: System::Windows::Forms::ComboBox^ cbListUser;
-		   
+	private: System::Windows::Forms::GroupBox^ groupBox1;
+	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::Button^ BtnPaye;
+
 
 
 	protected:
@@ -72,16 +82,55 @@ namespace linkhubCLR {
 		void InitializeComponent(void)
 		{
 			this->cbListUser = (gcnew System::Windows::Forms::ComboBox());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->BtnPaye = (gcnew System::Windows::Forms::Button());
+			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// cbListUser
 			// 
+			this->cbListUser->Font = (gcnew System::Drawing::Font(L"Sans Serif Collection", 7.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->cbListUser->FormattingEnabled = true;
 			this->cbListUser->Location = System::Drawing::Point(12, 12);
 			this->cbListUser->Name = L"cbListUser";
-			this->cbListUser->Size = System::Drawing::Size(367, 24);
+			this->cbListUser->Size = System::Drawing::Size(367, 40);
 			this->cbListUser->TabIndex = 0;
 			this->cbListUser->SelectedIndexChanged += gcnew System::EventHandler(this, &FormMoney::cbListUser_SelectedIndexChanged);
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->groupBox1->BackColor = System::Drawing::SystemColors::Menu;
+			this->groupBox1->Controls->Add(this->textBox1);
+			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Arial", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->groupBox1->Location = System::Drawing::Point(408, 12);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(479, 544);
+			this->groupBox1->TabIndex = 1;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Payer la somme";
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(88, 241);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(297, 30);
+			this->textBox1->TabIndex = 0;
+			// 
+			// BtnPaye
+			// 
+			this->BtnPaye->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
+			this->BtnPaye->Font = (gcnew System::Drawing::Font(L"Sans Serif Collection", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->BtnPaye->Location = System::Drawing::Point(1043, 500);
+			this->BtnPaye->Name = L"BtnPaye";
+			this->BtnPaye->Size = System::Drawing::Size(208, 93);
+			this->BtnPaye->TabIndex = 2;
+			this->BtnPaye->Text = L"Payer";
+			this->BtnPaye->UseVisualStyleBackColor = true;
 			// 
 			// FormMoney
 			// 
@@ -89,6 +138,8 @@ namespace linkhubCLR {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::Window;
 			this->ClientSize = System::Drawing::Size(1282, 605);
+			this->Controls->Add(this->BtnPaye);
+			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->cbListUser);
 			this->Font = (gcnew System::Drawing::Font(L"Arial", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -96,6 +147,8 @@ namespace linkhubCLR {
 			this->Name = L"FormMoney";
 			this->Text = L"FormMoney";
 			this->Load += gcnew System::EventHandler(this, &FormMoney::FormMoney_Load);
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
@@ -106,6 +159,8 @@ namespace linkhubCLR {
 
 		std::vector<std::string> dataList;
 		std::map<std::string, std::string> idTextMap;
+		//compte le nombre denregistrement de getUser en bdd
+		int cptEntreUser = 0;
 
 		// Parcours des résultats et ajout à la combolist avec l'ID caché dans la map
 		while (result->next()) {
@@ -114,6 +169,7 @@ namespace linkhubCLR {
 
 			dataList.push_back(text);
 			idTextMap[id] = text; // Stocke la correspondance ID <-> Texte dans la map
+			cptEntreUser++;
 		}
 
 		// Parcours de la dataList pour ajouter les éléments à la combolist
