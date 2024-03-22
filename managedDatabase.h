@@ -46,6 +46,10 @@ public:
         return nativeConnector->TestConnectAdmin(msclr::interop::marshal_as<std::string>(id),
             msclr::interop::marshal_as<std::string>(mdp));
     }
+    bool AlterSommeUserAdd(String^ id, String^ somme) {
+        return nativeConnector->alterSommeUserAdd(msclr::interop::marshal_as<std::string>(id),
+            msclr::interop::marshal_as<std::string>(somme));
+    }
 
     sql::ResultSet* GetUserModerateur() {
         return nativeConnector->getUserModerateur();

@@ -69,6 +69,23 @@ public:
 	bool TestConnectAdmin(std::string id,std::string mdp) {
 		return false;
 	}
+	bool alterSommeUserAdd(std::string id , std::string somme) {
+		
+		try
+		{
+
+			pstmt = con->prepareStatement("UPDATE UTILISATEUR SET Wallet = ? + Wallet WHERE UTILISATEUR.ID_USER = ?;");
+			pstmt->setString(1, somme);
+			pstmt->setString(1, id);
+			resultRq = pstmt->executeQuery();
+			delete pstmt;
+			return true;
+		}
+
+		catch (sql::SQLException& e) { return false; }
+		catch (std::exception& e) { return false; }
+		return false;
+	}
 	
 	sql::ResultSet* DatabaseConnector::getUserModerateur() {
 		try

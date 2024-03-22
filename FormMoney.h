@@ -211,7 +211,8 @@ namespace linkhubCLR {
 		System::String^ ttSomme = tbSomme->Text;
 		System::String^ managedString = dataArray[indexSelectionne]->id;
 		std::string nativeString = msclr::interop::marshal_as<std::string>(managedString);
-		
+		managedConnector->ConnectDb("192.168.114.2", "lmascher", "hJfmd@$#w2@sBQYV", "linkhub");
+		bool result = managedConnector->AlterSommeUserAdd("4","56");
 
 	}
 };
