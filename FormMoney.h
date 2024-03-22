@@ -58,7 +58,8 @@ namespace linkhubCLR {
 		}
 	private: System::Windows::Forms::ComboBox^ cbListUser;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ tbSomme;
+
 	private: System::Windows::Forms::Button^ BtnPaye;
 
 
@@ -83,7 +84,7 @@ namespace linkhubCLR {
 		{
 			this->cbListUser = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->tbSomme = (gcnew System::Windows::Forms::TextBox());
 			this->BtnPaye = (gcnew System::Windows::Forms::Button());
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -103,7 +104,7 @@ namespace linkhubCLR {
 			// 
 			this->groupBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
 			this->groupBox1->BackColor = System::Drawing::SystemColors::Menu;
-			this->groupBox1->Controls->Add(this->textBox1);
+			this->groupBox1->Controls->Add(this->tbSomme);
 			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Arial", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->groupBox1->Location = System::Drawing::Point(408, 12);
@@ -113,12 +114,14 @@ namespace linkhubCLR {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Payer la somme";
 			// 
-			// textBox1
+			// tbSomme
 			// 
-			this->textBox1->Location = System::Drawing::Point(88, 241);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(297, 30);
-			this->textBox1->TabIndex = 0;
+			this->tbSomme->Font = (gcnew System::Drawing::Font(L"Sans Serif Collection", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->tbSomme->Location = System::Drawing::Point(88, 241);
+			this->tbSomme->Name = L"tbSomme";
+			this->tbSomme->Size = System::Drawing::Size(297, 57);
+			this->tbSomme->TabIndex = 0;
 			// 
 			// BtnPaye
 			// 
@@ -131,6 +134,7 @@ namespace linkhubCLR {
 			this->BtnPaye->TabIndex = 2;
 			this->BtnPaye->Text = L"Payer";
 			this->BtnPaye->UseVisualStyleBackColor = true;
+			this->BtnPaye->Click += gcnew System::EventHandler(this, &FormMoney::BtnPaye_Click);
 			// 
 			// FormMoney
 			// 
@@ -174,7 +178,7 @@ namespace linkhubCLR {
 		//ajustattion du tableau par rapport au nb denregistrement
 		dataArray = gcnew array<MyData^>(cptEntreUser);
 		cptEntreUser = 0;
-
+		result = managedConnector->GetUserAll();
 		// Ajoute des données au tableau
 		while (result->next()) {
 
@@ -201,7 +205,16 @@ namespace linkhubCLR {
 
 	private: System::Void cbListUser_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	};
+	private: System::Void BtnPaye_Click(System::Object^ sender, System::EventArgs^ e) {
+		
+		int indexSelectionne = cbListUser->SelectedIndex;
+		System::String^ ttSomme = tbSomme->Text;
+		System::String^ managedString = dataArray[indexSelectionne]->id;
+		std::string nativeString = msclr::interop::marshal_as<std::string>(managedString);
+		
+
+	}
+};
 }
 
 
