@@ -1,0 +1,5 @@
+cd C:\visualStudio\LinkHUb-depuis0
+
+dotnet ef dbcontext scaffold "server=192.168.114.2;port=3306;user=lmascher;password=hJfmd@$#w2@sBQYV;database=linkhub" Pomelo.EntityFrameworkCore.MySql -o Entities --force
+
+
